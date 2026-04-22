@@ -1,0 +1,24 @@
+name: Backend Database Integration Tests (Dockerized)
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  backend-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Check Docker
+        run: docker --version
+
+      - name: Run Docker Compose
+        run: docker compose up --build --abort-on-container-exit --exit-code-from backend
+
+      - name: Cleanup
+        if: always()
+        run: docker compose down -v
